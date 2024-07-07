@@ -74,7 +74,7 @@ with col1:
             st.success("This message is classified as **NOT SPAM**.")
 
 with col2:
-    st.image('image.jpeg', caption='Email spam', use_column_width=True)
+    st.image('email.jpeg', caption='Email spam', use_column_width=True)
 
 st.markdown("---")
 st.text("By Vaishnavi ❤️")
