@@ -26,13 +26,36 @@ def transform_text(text):
 tfidf = pickle.load(open('vectorizer.pkl', 'rb'))
 model = pickle.load(open('model.pkl', 'rb'))
 
-# Define accuracy for the model
-accuracy = 97
+# Define accuracies for the models
+accuracies = {
+    'MultinomialNB': 97,
+    'GaussianNB': 98,
+    'BernoulliNB': 97
+}
 
 st.markdown(
     """
+    <style>
+    body {
+        background-image: url('https://www.pexels.com/photo/empty-brown-canvas-235985/'); /* Replace with your image URL */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-color: #B62666; /* Fallback color */
+    }
+    .main {
+        background-color: #D02873; /* Semi-transparent background for main content */
+        padding: 20px;
+        border-radius: 10px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+st.markdown(
+    """
     <div style="text-align: center;">
-        <h1 style="color: #FF6347;">📧 Email Spam Detection 📧</h1>
+        <h1 style="color: #FFFFF;">📧 Email Spam Detection 📧</h1>
     </div>
     """,
     unsafe_allow_html=True
@@ -40,7 +63,7 @@ st.markdown(
 
 st.markdown(
     """
-    <div style="font-size: 20px;color: orange;font-family: Georgia, serif; text-align: center;">
+    <div style="font-size: 20px;color: #FFFFF;font-family: Georgia, serif; text-align: center;">
         📬 This app uses a Machine Learning model to predict whether a given message is spam or not. 
         📧 Email spam, also known as junk email, refers to unsolicited messages sent in bulk by email (spamming). 
         🚫 These spam messages can be harmful, containing phishing links or malware. 
@@ -56,7 +79,7 @@ st.markdown("---")
 st.markdown(
     """
     <div style="text-align: center;">
-        <h2 style="color: #4682B4;">🎥 Learn More About Email Spam 🎥</h2>
+        <h2 style="color: #8EC00F;">🎥 Learn More About Email Spam 🎥</h2>
     </div>
     """,
     unsafe_allow_html=True
@@ -95,7 +118,7 @@ st.markdown("---")
 st.markdown(
     """
     <div style="text-align: center;">
-        <h1 style="color: #9400d3;">🔍 Prediction System 🔍</h1>
+        <h1 style="color: blue;">🔍 Prediction System 🔍</h1>
     </div>
     """,
     unsafe_allow_html=True
@@ -103,7 +126,7 @@ st.markdown(
 st.markdown(
     """
     <div style="text-align: ;">
-        <h3 style="color: #cae00d;">✉️ Enter Your Message Below ✉️</h3>
+        <h3 style="color: #cae00d;">✉️ Enter Your Email Subject Below ✉️</h3>
     </div>
     """,
     unsafe_allow_html=True
@@ -132,15 +155,20 @@ st.markdown(
     """
     <div style="text-align: center;">
         <h2 style="color: #4682B4;">📊 Model Accuracy 📊</h2>
-        <p style="font-size: 18px; color: red; font-family: Georgia, serif;">
-            The accuracy of the Multinomial Naive Bayes (MNB) model is 97%.
+        <p style="font-size: 18px; color: pink; font-family: Georgia, serif;">
+            The accuracies of the different models are as follows:
+            <br>Multinomial Naive Bayes (MNB): 97%
+            <br>Gaussian Naive Bayes (GNB): 98%
+            <br>Bernoulli Naive Bayes (BNB): 97%
         </p>
     </div>
     """,
     unsafe_allow_html=True
 )
+
+# Plot bar graph for all three models
 fig, ax = plt.subplots(figsize=(6, 3))
-ax.barh(['MultinomialNB Model'], [accuracy], color='#4682B4')
+ax.barh(list(accuracies.keys()), list(accuracies.values()), color=['#4682B4', '#FF6347', '#32CD32'])
 ax.set_xlim(0, 100)
 ax.set_xlabel('Accuracy (%)')
 ax.set_title('Model Accuracy')
@@ -148,11 +176,11 @@ st.pyplot(fig)
 
 st.markdown(
     """
-    <div style="text-align: center;">
-        <p style="font-size: 18px; color: #4682B4; font-family: Georgia, serif;">
-            The Multinomial Naive Bayes (MultinomialNB) model is a probabilistic learning method commonly used in text classification.
-            It leverages the Bayes' theorem with strong independence assumptions between features.
-            This model is particularly effective for problems with discrete features, such as word counts in documents, making it ideal for spam detection.
+    <div style="text-align: center;font:>
+        <p style="font-size: 70px; color: white; font-family: Georgia, serif;">
+            These models are probabilistic learning methods commonly used in text classification.
+            They leverage the Bayes' theorem with strong independence assumptions between features.
+            These models are particularly effective for problems with discrete features, such as word counts in documents, making them ideal for spam detection.
         </p>
     </div>
     """,
