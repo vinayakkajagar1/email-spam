@@ -30,7 +30,9 @@ model = pickle.load(open('model.pkl', 'rb'))
 accuracies = {
     'MultinomialNB': 97,
     'GaussianNB': 98,
-    'BernoulliNB': 97
+    'BernoulliNB': 97,
+    'RandomForestClassifier': 99,
+    'AdaBoostClassifier': 97
 }
 
 st.markdown(
@@ -160,6 +162,8 @@ st.markdown(
             <br>Multinomial Naive Bayes (MNB): 97%
             <br>Gaussian Naive Bayes (GNB): 98%
             <br>Bernoulli Naive Bayes (BNB): 97%
+            <br>RandomForestClassifier (rfc): 99%
+            <br>AdaBoostClassifier (abc): 97%
         </p>
     </div>
     """,
