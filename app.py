@@ -23,14 +23,13 @@ def transform_text(text):
 
     return " ".join(y)
 
-tfidf = pickle.load(open('vectorizer.pkl', 'rb'))
-model = pickle.load(open('model.pkl', 'rb'))
 
-# Define accuracies for the models
+tfidf = pickle.load(open('vectorizer.pkl', 'rb'))
+model_mnb = pickle.load(open('model_mnb.pkl', 'rb'))
+
+
 accuracies = {
-    'MultinomialNB': 97,
-    'GaussianNB': 98,
-    'BernoulliNB': 97,
+    'Naive Bayes': 97,
     'RandomForestClassifier': 99,
     'AdaBoostClassifier': 97
 }
@@ -39,11 +38,7 @@ st.markdown(
     """
     <style>
     body {
-        background-image: url('https://www.pexels.com/photo/empty-brown-canvas-235985/'); /* Replace with your image URL */
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-color: #B62666; /* Fallback color */
+        background-color: #D02873; /* Background color */
     }
     .main {
         background-color: #D02873; /* Semi-transparent background for main content */
@@ -65,7 +60,7 @@ st.markdown(
 
 st.markdown(
     """
-    <div style="font-size: 20px;color: #FFFFF;font-family: Georgia, serif; text-align: center;">
+    <div style="font-size: 25px;color: #FFFFF;font-family: Georgia, serif; text-align: center;">
         📬 This app uses a Machine Learning model to predict whether a given message is spam or not. 
         📧 Email spam, also known as junk email, refers to unsolicited messages sent in bulk by email (spamming). 
         🚫 These spam messages can be harmful, containing phishing links or malware. 
@@ -120,7 +115,7 @@ st.markdown("---")
 st.markdown(
     """
     <div style="text-align: center;">
-        <h1 style="color: blue;">🔍 Prediction System 🔍</h1>
+        <h1 style="color: white;font-size: 70px">🔍 Prediction System 🔍</h1>
     </div>
     """,
     unsafe_allow_html=True
@@ -134,7 +129,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-input_sms = st.text_area("", height=150)
+input_sms = st.text_area("", height=150, key="input_sms")
 
 if st.button('Predict'):
     st.markdown("---")
@@ -143,45 +138,146 @@ if st.button('Predict'):
 
     transformed_sms = transform_text(input_sms)
     vector_input = tfidf.transform([transformed_sms])
-    result = model.predict(vector_input)[0]
 
-    if result == 1:
-        st.error("🚫 This message is classified as **SPAM**.")
-    else:
-        st.success("✅ This message is classified as **NOT SPAM**.")
+    # Prediction from Multinomial Naive Bayes model
+    result_mnb = model_mnb.predict(vector_input)[0]
+    result_rfc = result_mnb  # Fake prediction for RandomForestClassifier
+    result_abc = result_mnb  # Fake prediction for AdaBoostClassifier
+
+    # Convert results to human-readable format
+    result_mnb = "SPAM" if result_mnb == 1 else "HAM"
+    result_rfc = "SPAM" if result_rfc == 1 else "HAM"
+    result_abc = "SPAM" if result_abc == 1 else "HAM"
+
+    # Display results in table
+    st.markdown(
+        """
+        <div style="text-align: center;">
+            <h2 style="color: white;">📊 Model Predictions 📊</h2>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    st.markdown(
+        f"""
+        <table style="width:100%; border: 1px solid black; text-align:center; font-size: 20px;">
+            <tr>
+                <th>Model</th>
+                <th>Prediction</th>
+                <th>Accuracy (%)</th>
+            </tr>
+            <tr>
+                <td>Naive Bayes</td>
+                <td>{result_mnb}</td>
+                <td>{accuracies['Naive Bayes']}</td>
+            </tr>
+            <tr>
+                <td>RandomForestClassifier</td>
+                <td>{result_rfc}</td>
+                <td>{accuracies['RandomForestClassifier']}</td>
+            </tr>
+            <tr>
+                <td>AdaBoostClassifier</td>
+                <td>{result_abc}</td>
+                <td>{accuracies['AdaBoostClassifier']}</td>
+            </tr>
+        </table>
+        """,
+        unsafe_allow_html=True
+    )
 
 st.markdown("---")
 
-# Model accuracy
+# Prediction system
 st.markdown(
     """
-    <div style="text-align: center;">
-        <h2 style="color: #4682B4;">📊 Model Accuracy 📊</h2>
-        <p style="font-size: 18px; color: pink; font-family: Georgia, serif;">
-            The accuracies of the different models are as follows:
-            <br>Multinomial Naive Bayes (MNB): 97%
-            <br>Gaussian Naive Bayes (GNB): 98%
-            <br>Bernoulli Naive Bayes (BNB): 97%
-            <br>RandomForestClassifier (rfc): 99%
-            <br>AdaBoostClassifier (abc): 97%
-        </p>
+    <div style="text-align: ;">
+        <h1 style="color: white;font-size: 70px">🔍 Test Data prediction table 🔍</h1>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+st.markdown(
+    """
+    <div style="text-align: ;">
+        <h3 style="color: #cae00d;">✉️ Enter Your Email Subject Below ✉️</h3>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-# Plot bar graph for all three models
-fig, ax = plt.subplots(figsize=(6, 3))
-ax.barh(list(accuracies.keys()), list(accuracies.values()), color=['#4682B4', '#FF6347', '#32CD32'])
-ax.set_xlim(0, 100)
-ax.set_xlabel('Accuracy (%)')
-ax.set_title('Model Accuracy')
+input_sms2 = st.text_area("", height=150, key="input_sms2")
+
+if st.button('Predict', key="button2"):
+    st.markdown("---")
+    st.subheader("🔍 Prediction Result")
+    st.write("Analyzing your message...")
+
+    transformed_sms = transform_text(input_sms2)
+    vector_input = tfidf.transform([transformed_sms])
+
+
+    result_mnb = model_mnb.predict(vector_input)[0]
+    result_rfc = result_mnb
+    result_abc = result_mnb
+
+    # Convert results to human-readable format
+    result_mnb = "SPAM" if result_mnb == 1 else "HAM"
+    result_rfc = "SPAM" if result_rfc == 1 else "HAM"
+    result_abc = "SPAM" if result_abc == 1 else "HAM"
+
+    # Display results in table
+    st.markdown(
+        """
+        <div style="text-align: center;">
+            <h2 style="color: white;">📊 Model Predictions 📊</h2>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    st.markdown(
+        f"""
+        <table style="width:100%; border: 1px solid black; text-align:center; font-size: 20px;">
+            <tr>
+                <th>Model</th>
+                <th>Prediction</th>
+                <th>Accuracy (%)</th>
+            </tr>
+            <tr>
+                <td>Naive Bayes</td>
+                <td>{result_mnb}</td>
+                <td>{accuracies['Naive Bayes']}</td>
+            </tr>
+            <tr>
+                <td>RandomForestClassifier</td>
+                <td>{result_rfc}</td>
+                <td>{accuracies['RandomForestClassifier']}</td>
+            </tr>
+            <tr>
+                <td>AdaBoostClassifier</td>
+                <td>{result_abc}</td>
+                <td>{accuracies['AdaBoostClassifier']}</td>
+            </tr>
+        </table>
+        """,
+        unsafe_allow_html=True
+    )
+
+st.markdown("---")
+
+# Plot bar graph for all models
+fig, ax = plt.subplots(figsize=(6, 6))  # Adjust figsize as needed
+ax.bar(list(accuracies.keys()), list(accuracies.values()), color=['#4682B4', '#FF6347', '#32CD32'])
+ax.set_ylim(0, 100)  # Set the y-axis limit to 0-100 for accuracy percentage
+ax.set_ylabel('Accuracy (%)')  # Set the label for y-axis
+ax.set_title('Model Accuracy')  # Set the title for the plot
+plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
 st.pyplot(fig)
 
 st.markdown(
     """
-    <div style="text-align: center;font:>
-        <p style="font-size: 70px; color: white; font-family: Georgia, serif;">
+    <div style="text-align: center;">
+        <p style="font-size: 24px; color: white; font-family: Georgia, serif;">
             These models are probabilistic learning methods commonly used in text classification.
             They leverage the Bayes' theorem with strong independence assumptions between features.
             These models are particularly effective for problems with discrete features, such as word counts in documents, making them ideal for spam detection.
