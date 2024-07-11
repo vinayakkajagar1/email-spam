@@ -189,89 +189,15 @@ if st.button('Predict'):
 st.markdown("---")
 
 # Prediction system
-st.markdown(
-    """
-    <div style="text-align: ;">
-        <h1 style="color: white;font-size: 70px">🔍 Test Data prediction table 🔍</h1>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-st.markdown(
-    """
-    <div style="text-align: ;">
-        <h3 style="color: #cae00d;">✉️ Enter Your Email Subject Below ✉️</h3>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
 
-input_sms2 = st.text_area("", height=150, key="input_sms2")
-
-if st.button('Predict', key="button2"):
-    st.markdown("---")
-    st.subheader("🔍 Prediction Result")
-    st.write("Analyzing your message...")
-
-    transformed_sms = transform_text(input_sms2)
-    vector_input = tfidf.transform([transformed_sms])
-
-
-    result_mnb = model_mnb.predict(vector_input)[0]
-    result_rfc = result_mnb
-    result_abc = result_mnb
-
-    # Convert results to human-readable format
-    result_mnb = "SPAM" if result_mnb == 1 else "HAM"
-    result_rfc = "SPAM" if result_rfc == 1 else "HAM"
-    result_abc = "SPAM" if result_abc == 1 else "HAM"
-
-    # Display results in table
-    st.markdown(
-        """
-        <div style="text-align: center;">
-            <h2 style="color: white;">📊 Model Predictions 📊</h2>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    st.markdown(
-        f"""
-        <table style="width:100%; border: 1px solid black; text-align:center; font-size: 20px;">
-            <tr>
-                <th>Model</th>
-                <th>Prediction</th>
-                <th>Accuracy (%)</th>
-            </tr>
-            <tr>
-                <td>Naive Bayes</td>
-                <td>{result_mnb}</td>
-                <td>{accuracies['Naive Bayes']}</td>
-            </tr>
-            <tr>
-                <td>RandomForestClassifier</td>
-                <td>{result_rfc}</td>
-                <td>{accuracies['RandomForestClassifier']}</td>
-            </tr>
-            <tr>
-                <td>AdaBoostClassifier</td>
-                <td>{result_abc}</td>
-                <td>{accuracies['AdaBoostClassifier']}</td>
-            </tr>
-        </table>
-        """,
-        unsafe_allow_html=True
-    )
-
-st.markdown("---")
 
 # Plot bar graph for all models
 fig, ax = plt.subplots(figsize=(6, 6))  # Adjust figsize as needed
 ax.bar(list(accuracies.keys()), list(accuracies.values()), color=['#4682B4', '#FF6347', '#32CD32'])
-ax.set_ylim(0, 100)  # Set the y-axis limit to 0-100 for accuracy percentage
-ax.set_ylabel('Accuracy (%)')  # Set the label for y-axis
-ax.set_title('Model Accuracy')  # Set the title for the plot
-plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
+ax.set_ylim(0, 100)
+ax.set_ylabel('Accuracy (%)')
+ax.set_title('Model Accuracy')
+plt.xticks(rotation=45)
 st.pyplot(fig)
 
 st.markdown(
@@ -286,5 +212,39 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+st.markdown("---")
+
+st.markdown(
+    """
+    <div style="text-align: center;">
+        <h2 style="color: white;">📈 Graphs 📈</h2>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+col1, col2 = st.columns(2)
+with col1:
+    st.image('graph1.png', caption='Spam', use_column_width=True)
+with col2:
+    st.image('graph2.png', caption='Ham', use_column_width=True)
+
+st.markdown("---")
+
+st.markdown(
+    """
+    <div style="text-align: center;">
+         <h2 style="color: white;"></h2>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+col1, col2 = st.columns(2)
+with col1:
+    st.image('graph3.png', caption='Plot', use_column_width=True)
+with col2:
+    st.image('graph4.png', caption='World Cloud', use_column_width=True)
+
+st.markdown("---")
+st.image('graph5.png', caption='World Cloud', use_column_width=True)
 st.markdown("---")
 st.text("By Vaishnavi ❤️")
