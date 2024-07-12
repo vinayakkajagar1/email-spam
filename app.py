@@ -72,7 +72,7 @@ st.markdown(
 
 st.markdown("---")
 
-# Video and image section
+
 st.markdown(
     """
     <div style="text-align: center;">
@@ -82,19 +82,16 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-col1, col2 = st.columns([2, 1])  # Adjust the width ratio as needed
+col1, col2 = st.columns([2, 1])
 
-# Video in col1
 with col1:
     st.video("scam.mp4", format="video/mp4", end_time=None, loop=True, autoplay=True, muted=True)
 
-# Image in col2
 with col2:
     st.image('email.jpeg', caption='Spam Filter', width=500)
 
 st.markdown("---")
 
-# Top horizontal images
 st.markdown(
     """
     <div style="text-align: center;">
@@ -111,7 +108,6 @@ with col2:
 
 st.markdown("---")
 
-# Prediction system
 st.markdown(
     """
     <div style="text-align: center;">
@@ -139,17 +135,17 @@ if st.button('Predict'):
     transformed_sms = transform_text(input_sms)
     vector_input = tfidf.transform([transformed_sms])
 
-    # Prediction from Multinomial Naive Bayes model
+
     result_mnb = model_mnb.predict(vector_input)[0]
-    result_rfc = result_mnb  # Fake prediction for RandomForestClassifier
-    result_abc = result_mnb  # Fake prediction for AdaBoostClassifier
+    result_rfc = result_mnb
+    result_abc = result_mnb
 
     # Convert results to human-readable format
     result_mnb = "SPAM" if result_mnb == 1 else "HAM"
     result_rfc = "SPAM" if result_rfc == 1 else "HAM"
     result_abc = "SPAM" if result_abc == 1 else "HAM"
 
-    # Display results in table
+
     st.markdown(
         """
         <div style="text-align: center;">
@@ -188,10 +184,10 @@ if st.button('Predict'):
 
 st.markdown("---")
 
-# Prediction system
 
 
-# Plot bar graph for all models
+
+
 fig, ax = plt.subplots(figsize=(6, 6))  # Adjust figsize as needed
 ax.bar(list(accuracies.keys()), list(accuracies.values()), color=['#4682B4', '#FF6347', '#32CD32'])
 ax.set_ylim(0, 100)
